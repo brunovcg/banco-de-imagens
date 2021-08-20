@@ -4,14 +4,14 @@ import os
 
 env = Env()
 
-folder = environ.get("FILES_DIRECTORY")
+main_path = environ.get("FILES_DIRECTORY")
 
-active_in_folder= os.listdir(folder)
+folders_in_storage= os.listdir(main_path)
 
 
 formats = ['png', 'jpg','gif']
 
-if not "storage" in active_in_folder:
+if not "storage" in folders_in_storage:
     os.mkdir("kenzie/storage")
 
 else:
