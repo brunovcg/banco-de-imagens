@@ -2,6 +2,5 @@ venv
 .vscode
 **/__pycache__
 **/.pytest_cache
-.png
-.jpg
-.gif
+**/dirjpg
+/kenzie/storage
