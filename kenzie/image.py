@@ -1,11 +1,21 @@
 import os
-
+from environs import Env
+from os import environ
+import re
 
 formats = ['png', 'jpg','gif']
 
+env = Env()
 
-def smaller_than_1MB(file_size):
-    if file_size <= 1:
+max_size = environ.get("MAX_CONTENT_LENGTH")
+
+def smaller_than_Authorized(file_size):
+    
+    converted_max_size = int(re.sub('[^0-9]', '', max_size))
+
+    print(converted_max_size)
+
+    if file_size <= converted_max_size * 1000 * 1000:
         return True
     return False
 
@@ -19,7 +29,6 @@ def file_name_does_exist(file_name):
 
     all_files = []
     folders_in_storage = os.listdir('kenzie/storage')
-    print(folders_in_storage)
     for folder in folders_in_storage:
         folder_files = os.listdir(f'kenzie/storage/{folder}')
         all_files += folder_files
@@ -35,4 +44,8 @@ def download_all_files_zip():
 
 def download_all_file_with_specific_format():
     ...
+
+
+
+print(smaller_than_Authorized(10000))
 
