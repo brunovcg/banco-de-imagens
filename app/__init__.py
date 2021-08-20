@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 
-from kenzie.image import is_acceptable_format, file_name_does_exist, smaller_than_Authorized, max_size
+from kenzie.image import is_supported_format, file_name_does_exist, is_smaller_than_Authorized, list_all_file_with_specific_format, max_size, list_all_files
 
 
 @app.get('/download/<file_name>')
@@ -21,13 +21,19 @@ def download_dir_as_zip():
 
 @app.get('/files')
 def list_files():
-    return'teste'
+    return jsonify(list_all_files()), 200
 
 
 @app.get('/files/<type>')
-def list_files_by_type():
-    return "teste4"
+def list_files_by_type(type):
 
+    filtered = list_all_file_with_specific_format(type)
+
+    if len(filtered) < 1:
+        return {"message" : f"There is no file with '{type}' format"}, 404
+
+
+    return jsonify(filtered), 200
 
 
 
@@ -38,7 +44,7 @@ def upload():
         file = request.files["file"]
 
     except KeyError:
-        return {"message" : "You didn't attached a file with name 'file' "}, 406
+        return {"message" : "Error - You didn't attached a file with name 'file' "}, 406
     
 
     file_name = secure_filename(file.filename)
@@ -47,15 +53,15 @@ def upload():
 
     file_size = request.headers.get("Content-Length", 0)
    
-    if not smaller_than_Authorized(int(file_size)):
-        return {"message": f"This file is bigger than {max_size}"}, 413
+    if not is_smaller_than_Authorized(int(file_size)):
+        return {"message": f"Error - This file is bigger than {max_size}"}, 413
 
     
-    if not is_acceptable_format(file_format):
-        return {"message" : f"The only supported file extentions are: 'png','jpg' and 'gif', you tried a '{file_format}' file"}, 415
+    if not is_supported_format(file_format):
+        return {"message" : f"Error - The only supported file extentions are: 'png','jpg' and 'gif', you tried a '{file_format}' file"}, 415
 
     if file_name_does_exist(file_name):
-        return {"message" : f"A file with a same name is saved on our database, upload this file with another name"}, 409
+        return {"message" : f"Error - A file with named '{file_name}' already exists on our database, upload this file with another name"}, 409
 
    
     upload_directory = f"./kenzie/storage/{file_format}"
@@ -65,15 +71,6 @@ def upload():
     file.save(file_path)
 
 
-
-
-
-
-
-
-
-
-
-    return jsonify(f"File '{file_name}' was uploaded"), 201
+    return {"message" : f"File '{file_name}' was uploaded"}, 201
 
 
