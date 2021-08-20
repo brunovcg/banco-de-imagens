@@ -18,7 +18,6 @@ def is_supported_format(file_format):
     return False
 
 
-
 def list_all_files():
     all_files = []
     folders_in_storage = os.listdir('kenzie/storage')
@@ -37,10 +36,24 @@ def list_all_file_with_specific_format(format):
     return filtered_formats
 
 
-
 def file_name_does_exist(file_name):
    
     if file_name in list_all_files():
         return True
     return False
+
+
+def compress_file(type : str, rate : str):
+    import os
+
+    default_rate = "1"
+
+    if rate != "":
+        default_rate = rate
+
+
+    if type != "":
+        os.system(f"cd kenzie/storage/ && zip -{default_rate} /tmp/image.zip ./{type}/* && cd -")
+    else:
+         os.system(f"cd kenzie/storage && zip -{default_rate} /tmp/image.zip ./*/* && cd -")
 
