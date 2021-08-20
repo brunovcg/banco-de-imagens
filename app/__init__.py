@@ -1,6 +1,4 @@
-from itertools import compress
 from flask import Flask, request, jsonify, safe_join, send_from_directory
-from flask.wrappers import Request
 from werkzeug.utils import secure_filename
 from kenzie.image import (is_supported_format,
                             file_name_does_exist,
@@ -16,14 +14,11 @@ from kenzie.__init__ import formats
 app = Flask(__name__)
 
 
-
-
-
 @app.get('/download/<file_name>')
 def download(file_name):
 
     if not file_name or not file_name in list_all_files():
-        return {"message" : f"The file '{file_name}' does not exist on database"}, 404
+        return {"message" : f"Error - The file '{file_name}' does not exist on database"}, 404
 
     file_format = file_name.split('.')[-1]
     
@@ -33,11 +28,8 @@ def download(file_name):
 @app.get('/download-zip')
 def download_dir_as_zip():
 
-
     if len(list_all_files()) == 0:
-        return {"message" : "Data base has no files"},404
-
-
+        return {"message" : "Error - Database has no files"},404
     
     file_type = request.args.get("file_type")
 
@@ -49,9 +41,7 @@ def download_dir_as_zip():
     if not compression_rate:
         compression_rate = ""
         
-
     compress_file(file_type,compression_rate)
-
   
     return send_from_directory(directory="/tmp/", path="image.zip", as_attachment=True), 200
   
@@ -67,7 +57,7 @@ def list_files_by_type(type):
     filtered = list_all_file_with_specific_format(type)
 
     if len(filtered) < 1:
-        return {"message" : f"There is no file with '{type}' format"}, 404
+        return {"message" : f"Error - There is no file with '{type}' format"}, 404
 
     return jsonify(filtered), 200
 
@@ -89,7 +79,6 @@ def upload():
    
     if not is_smaller_than_Authorized(int(file_size)):
         return {"message": f"Error - This file is bigger than {max_size}"}, 413
-
     
     if not is_supported_format(file_format):
         return {"message" : f"Error - The only supported file extentions are: '{', '.join(formats)}'. You tried a '{file_format}' file"}, 415
@@ -103,7 +92,4 @@ def upload():
 
     file.save(file_path)
 
-
     return {"message" : f"File '{file_name}' was uploaded"}, 201
-
-
