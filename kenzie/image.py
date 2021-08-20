@@ -1,19 +1,11 @@
 import os
-from environs import Env
-from os import environ
 import re
+from kenzie import formats, max_size
 
-formats = ['png', 'jpg','gif']
-
-env = Env()
-
-max_size = environ.get("MAX_CONTENT_LENGTH")
 
 def smaller_than_Authorized(file_size):
     
     converted_max_size = int(re.sub('[^0-9]', '', max_size))
-
-    print(converted_max_size)
 
     if file_size <= converted_max_size * 1000 * 1000:
         return True
@@ -45,7 +37,4 @@ def download_all_files_zip():
 def download_all_file_with_specific_format():
     ...
 
-
-
-print(smaller_than_Authorized(10000))
 
