@@ -21,7 +21,7 @@ def test_if_show_a_filetype_if_it_exists_otherwise_show_error():
 
     files_of_this_type = list_all_file_with_specific_format(filetype)
 
-    if len(files_of_this_type) > 1:
+    if len(files_of_this_type) > 0:
         assert test_client.get(f'/files/{filetype}').status_code == 200
         assert test_client.get(f'/files/{filetype}').get_json() == files_of_this_type
     else:
