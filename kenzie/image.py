@@ -1,6 +1,7 @@
 from kenzie import formats, max_size
 
 
+
 def is_smaller_than_Authorized(file_size:int):
     """Receives a file size and check if it's size is equal or less then
     what was parametrized on .env.
@@ -11,7 +12,6 @@ def is_smaller_than_Authorized(file_size:int):
     Returns:
         boolean: Returns true if it is smaller or equal and false if not.  
     """
-
     import re
     converted_max_size = int(re.sub('[^0-9]', '', max_size))
 
@@ -29,7 +29,6 @@ def is_supported_format(file_format:str):
     Returns:
         boolean: Returns true if it is supportable and false if not. 
     """
-
     if file_format in formats:
         return True
     return False

@@ -9,13 +9,20 @@ from kenzie.image import (is_supported_format,
                             compress_file                      
                             )
                             
-from kenzie.__init__ import formats
+from kenzie.__init__ import formats, create_folder_structure
 
 app = Flask(__name__)
 
 
+try:
+    create_folder_structure()
+except FileExistsError:
+    ...
+
+
 @app.get('/download/<file_name>')
 def download(file_name):
+ 
 
     if not file_name or not file_name in list_all_files():
         return {"message" : f"Error - The file '{file_name}' does not exist on database"}, 404
@@ -27,6 +34,7 @@ def download(file_name):
 
 @app.get('/download-zip')
 def download_dir_as_zip():
+
 
     if len(list_all_files()) == 0:
         return {"message" : "Error - Database has no files"},404
@@ -48,11 +56,13 @@ def download_dir_as_zip():
 
 @app.get('/files')
 def list_files():
+
     return jsonify(list_all_files()), 200
 
 
 @app.get('/files/<type>')
 def list_files_by_type(type):
+
 
     filtered = list_all_file_with_specific_format(type)
 
@@ -64,7 +74,7 @@ def list_files_by_type(type):
 
 @app.post('/upload')
 def upload():
-
+   
     try:
         file = request.files["file"]
 

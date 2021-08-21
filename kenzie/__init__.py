@@ -5,16 +5,16 @@ import os
 env = Env()
 
 main_path = environ.get("FILES_DIRECTORY")
-formats = environ.get('SUPPORTED_FILES').split(",")
+formats = ["png","jpg","gif"]
 max_size = environ.get("MAX_CONTENT_LENGTH")
-folders_in_storage= os.listdir(main_path)
 
-if not "storage" in folders_in_storage:
-    os.mkdir("kenzie/storage")
 
-else:
-    active_in_storage = os.listdir('kenzie/storage')
-    for item in formats:
-        if not item in active_in_storage:
-            os.mkdir(f"kenzie/storage/{item}")
+def create_folder_structure():
+
+    folders_in_storage= os.listdir(main_path)
+
+    if not "storage" in folders_in_storage:
+        os.mkdir("kenzie/storage")
+        for item in formats:
+            os.mkdir(f"kenzie/storage/{item}")              
             
