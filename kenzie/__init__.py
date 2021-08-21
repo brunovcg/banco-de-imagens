@@ -11,10 +11,10 @@ max_size = environ.get("MAX_CONTENT_LENGTH")
 
 def create_folder_structure():
 
-    folders_in_storage= os.listdir(main_path)
+    folders_in_storage= os.listdir("kenzie")
 
     if not "storage" in folders_in_storage:
-        os.mkdir("kenzie/storage")
+        os.mkdir(main_path)
         for item in formats:
-            os.mkdir(f"kenzie/storage/{item}")              
+            os.mkdir(f"{main_path}/{item}")              
             

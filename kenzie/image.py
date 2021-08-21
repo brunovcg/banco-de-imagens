@@ -1,7 +1,6 @@
 from kenzie import formats, max_size
 
 
-
 def is_smaller_than_Authorized(file_size:int):
     """Receives a file size and check if it's size is equal or less then
     what was parametrized on .env.
