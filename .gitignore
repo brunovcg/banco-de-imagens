@@ -4,3 +4,4 @@ venv
 **/.pytest_cache
 **/dirjpg
 /kenzie/storage
+/tests/testsfiles

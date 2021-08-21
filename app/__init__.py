@@ -57,7 +57,12 @@ def download_dir_as_zip():
 @app.get('/files')
 def list_files():
 
-    return jsonify(list_all_files()), 200
+    files = list_all_files()
+
+    if len(files) < 1:
+        return {"message" : "Error - The are no files on our database"}, 404 
+
+    return jsonify(files), 200
 
 
 @app.get('/files/<type>')
@@ -87,14 +92,16 @@ def upload():
 
     file_size = request.headers.get("Content-Length", 0)
    
-    if not is_smaller_than_Authorized(int(file_size)):
-        return {"message": f"Error - This file is bigger than {max_size}"}, 413
-    
+      
     if not is_supported_format(file_format):
         return {"message" : f"Error - The only supported file extentions are: '{', '.join(formats)}'. You tried a '{file_format}' file"}, 415
+  
 
     if file_name_does_exist(file_name):
         return {"message" : f"Error - A file with named '{file_name}' already exists on our database, upload this file with another name"}, 409
+
+    if not is_smaller_than_Authorized(int(file_size)):
+        return {"message": f"Error - This file is bigger than {max_size}"}, 413
    
     upload_directory = f"./kenzie/storage/{file_format}"
 
